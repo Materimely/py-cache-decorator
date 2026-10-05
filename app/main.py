@@ -6,11 +6,12 @@ def cache(func: Callable) -> Callable:
     stored_results[func] = {}
 
     def wrapper(*args, **kwargs) -> Any:
-        if args in stored_results[func]:
+        key = (args, tuple(sorted(kwargs.items())))
+        if key in stored_results[func]:
             print("Getting from cache")
-            return stored_results[func][args]
+            return stored_results[func][key]
         else:
             print("Calculating new result")
-            stored_results[func][args] = func(*args, **kwargs)
-            return stored_results[func][args]
+            stored_results[func][key] = func(*args, **kwargs)
+            return stored_results[func][key]
     return wrapper
